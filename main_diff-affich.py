@@ -256,7 +256,23 @@ while True:
     #print("Pressure : ",pressure_hPa," hectopascal (hPa) or millibar (mb)")
     #print("Altitude (Hypsometric Formula) : ", h ," meter")
     #print("Altitude (International Barometric Formula) : ", altitude ," meter")
-    
+
+    temp =str(temperature_c)
+    press = str(pressure_hPa)
+    alt=str(altitude)
+    pt = str(elapsed_time/1000)
+    tableau_valeur.write("\n")
+    tableau_valeur.write(temp+";"+press+";"+alt+";"+pt)
+
+    #Buzzer pour retrouver la fusée au sol  
+    if altitude<altitude_max :
+        #print (round(altitude-altitude0,0))
+        if round(altitude-altitude0,0) < 0.5 :
+            buzzer.freq(100)
+            buzzer.duty_u16(1000)
+            utime.sleep(0.05)
+            buzzer.duty_u16(0)
+  
     # bmp280_object.print_calibration()
     # bmp280_object.load_test_calibration()
     #print("\n")
