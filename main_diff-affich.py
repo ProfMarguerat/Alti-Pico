@@ -261,8 +261,11 @@ while True:
     press = str(pressure_hPa)
     alt=str(altitude)
     pt = str(elapsed_time/1000)
+    tableau_valeur = open(fichier,'a')
     tableau_valeur.write("\n")
     tableau_valeur.write(temp+";"+press+";"+alt+";"+pt)
+    tableau_valeur.close()
+    led.on()
 
     #Buzzer pour retrouver la fusée au sol  
     if altitude<altitude_max :
@@ -328,6 +331,7 @@ while True:
     #    oled.text(str(round(cpt/10, 2)), 0, 40)
         oled.text(str(r), 0, 48)
         oled.show()
+        led.off()
         #utime.sleep(0.2)
     
     if afficheur == 1 :
@@ -342,6 +346,7 @@ while True:
     #    oled.text(str(round(sensor.acceleration[2], 2)), 0, 32)
     #    oled.text(str(round(cpt/10, 2)), 0, 40)
         oled.show()
+        led.off()
     
     if afficheur == 2 :
         oled.text("Temperature:", 0, 0)
@@ -349,18 +354,20 @@ while True:
         oled.text("Pression actuelle :", 0, 16)
         oled.text(str(round(pressure_hPa,2)), 0, 24)
         oled.show()
+        led.off()
         
     if afficheur == 3 :
         oled.text("Num fichier:", 0, 0)
         oled.text(str(r), 0, 8)
         oled.show()
+        led.off()
     
-    temp =str(temperature_c)
-    press = str(pressure_hPa)
-    alt=str(altitude)
-    pt = str(elapsed_time/1000)
-    tableau_valeur.write("\n")
-    tableau_valeur.write(temp+";"+press+";"+alt+";"+pt)
+    #temp =str(temperature_c)
+    #press = str(pressure_hPa)
+    #alt=str(altitude)
+    #pt = str(elapsed_time/1000)
+    #tableau_valeur.write("\n")
+    #tableau_valeur.write(temp+";"+press+";"+alt+";"+pt)
     
 #    rled.on()
     #utime.sleep(0.1)
