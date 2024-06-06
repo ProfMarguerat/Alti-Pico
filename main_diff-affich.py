@@ -141,7 +141,7 @@ def altitude_HYP(hPa , temperature):
 # altitude from international barometric formula, given in BMP 180 datasheet
 def altitude_IBF(pressure):
     local_pressure = pressure    # Unit : hPa
-    #sea_level_pressure = 1013.25 # Unit : hPa
+    sea_level_pressure = 1013.25 # Unit : hPa
     #sea_level_pressure = 1009 # QNH Unit : hPa
     
     pressure_ratio = local_pressure / sea_level_pressure
