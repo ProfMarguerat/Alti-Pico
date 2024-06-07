@@ -1,8 +1,6 @@
 # bmp280 Library Credits :
 # Author David Stenwall Wahlund (david at dafnet.se)
 # https://github.com/dafvid/micropython-bmp280
-# firmware : rp2-pico-20210202-v1.14.uf2
-
 
 # import the required libraries
 from bmp280 import *
@@ -307,15 +305,26 @@ while True:
     #print (alt)
     # Démarrage chrono lorsque l'altitude dépasse celle de départ plus 2m pour pallier aux dérives de pression :
     if altitude > alt and start == 0:
-        print ("c'est parti !")
+        tableau_valeur = open(fichier,'a')
+        tableau_valeur.write("\n")
+        tableau_valeur.write("Départ")
+        tableau_valeur.close()
         start = 1
         start_time = ticks_ms()
     
     # Défilement du chrono à condition qu'il soit parti et que l'altitude soit supérieur à celle du départ plus 2m, la condition sur start permet de remettre le chrono à zero :
     if altitude > alt and start == 1 :
         elapsed_time = ticks_ms() - start_time  
-#    z = sensor.acceleration[2]
-    
+
+  
+    # Arrêt du chrono et remise à zero suite à un atterrissage :
+    if altitude < alt and start == 1 :
+        tableau_valeur = open(fichier,'a')
+        tableau_valeur.write("\n")
+        tableau_valeur.write("Atterrissage")
+        tableau_valeur.close()
+        start = 0
+      
     if afficheur == 0 :
         oled.text("Alt_ref :", 0, 0)
         oled.text(str(round(altitude0,2)), 70, 0)
@@ -323,12 +332,8 @@ while True:
         oled.text(str(round(altitude,2)), 70, 8)
         oled.text("Alt_M:", 0, 16)
         oled.text(str(round(altitude_max,2)), 70, 16)
-        #oled.text("haut_M:", 0, 24)
-        #oled.text(str(round(altitude_max-altitude0,2)), 70, 24)
         oled.text("Tps (s):",00,24)
         oled.text(str(elapsed_time/1000),70,24)
-    #    oled.text(str(round(sensor.acceleration[2], 2)), 0, 32)
-    #    oled.text(str(round(cpt/10, 2)), 0, 40)
         oled.text(str(r), 0, 48)
         oled.show()
         led.off()
@@ -343,8 +348,6 @@ while True:
         oled.text(str(round(altitude_max-altitude0,2)), 70, 16)
         oled.text("Tps (s):",00,24)
         oled.text(str(elapsed_time/1000),70,24)
-    #    oled.text(str(round(sensor.acceleration[2], 2)), 0, 32)
-    #    oled.text(str(round(cpt/10, 2)), 0, 40)
         oled.show()
         led.off()
     
@@ -361,26 +364,10 @@ while True:
         oled.text(str(r), 0, 8)
         oled.show()
         led.off()
+
+
     
-    #temp =str(temperature_c)
-    #press = str(pressure_hPa)
-    #alt=str(altitude)
-    #pt = str(elapsed_time/1000)
-    #tableau_valeur.write("\n")
-    #tableau_valeur.write(temp+";"+press+";"+alt+";"+pt)
-    
-#    rled.on()
-    #utime.sleep(0.1)
-#    rled.off()
-    utime.sleep(0.1)
-    
-    if altitude<altitude_max :
-        #print (round(altitude-altitude0,0))
-        if round(altitude-altitude0,0) < 0.5 :
-            buzzer.freq(100)
-            buzzer.duty_u16(1000)
-            utime.sleep(0.05)
-            buzzer.duty_u16(0)
+   
             
 
 
