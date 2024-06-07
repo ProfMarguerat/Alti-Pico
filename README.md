@@ -1,8 +1,10 @@
 # Alti Pico
 
-Programme pour altimètre à partir d'un Raspberry Pico
-Le schéma est identique que vous utilisiez un BMP280 ou un BME280 (seul la prise d'hygrométrie diffère pour le bme).
-Il y a un code pour le BMP et un autre pour le BME.
+Programme pour altimètre à partir d'un Raspberry Pico.  
+Le schéma est identique que vous utilisiez un BMP280 ou un BME280 (seul la prise d'hygrométrie diffère pour le bme).  
+Il y a un code pour le BMP et un autre pour le BME.  
+Il y a également une librairie pour chaque composant.  
+Il est possible de télécharger les librairies directement avec Thonny.  
 
 ## Schéma de câblage :
 
