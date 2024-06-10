@@ -238,8 +238,14 @@ while True:
     # Défilement du chrono à condition qu'il soit parti et que l'altitude soit supérieur à celle du départ plus 2m, la condition sur start permet de remettre le chrono à zero :
     if altitude > alt and start == 1 :
         elapsed_time = ticks_ms() - start_time  
-#    z = sensor.acceleration[2]
-    
+
+    # Détection de l'apogée (-2m pour éviter que ça se déclenche avec la dérive):
+    if altitude < altitude_max-2 :
+        tableau_valeur = open(fichier,'a')
+        tableau_valeur.write("\n")
+        tableau_valeur.write("Apogée !")
+        tableau_valeur.close()
+  
     # Arrêt du chrono et remise à zero suite à un atterrissage :
     if altitude < alt and start == 1 :
         tableau_valeur = open(fichier,'a')
