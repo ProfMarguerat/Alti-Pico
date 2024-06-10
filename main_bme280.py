@@ -279,7 +279,7 @@ while True:
         elapsed_time = ticks_ms() - start_time  
 
     #détection de l'apogée (-2m pour éviter que ça se déclenche avec la dérive):
-    if altitude < altitude_max-2 :
+    if altitude < altitude_max-2 and start ==1 :
         tableau_valeur = open(fichier,'a')
         tableau_valeur.write("\n")
         tableau_valeur.write("Apogée !")
