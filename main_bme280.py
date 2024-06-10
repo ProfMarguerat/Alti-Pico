@@ -114,9 +114,48 @@ def altitude_IBF(pressure):
     
     altitude = 44330*(1-(pressure_ratio**(1/5.255)))
     return altitude
+  
+# Fonction pour gérer les informations à afficher sur l'écran oled
+def affichage(afficheur) :
+    if afficheur ==0 :
+        oled.text("Alt_ref :", 0, 0)
+        oled.text(str(round(altitude0,2)), 70, 0)
+        oled.text("Alt:", 0, 8)
+        oled.text(str(round(altitude,2)), 70, 8)
+        oled.text("Alt_M:", 0, 16)
+        oled.text(str(round(altitude_max,2)), 70, 16)
+        oled.text("Tps (s):",00,24)
+        oled.text(str(elapsed_time/1000),70,24)
+        oled.text(str(r), 0, 48)
+        oled.show()
+        led.off()
 
+    if afficheur ==1:
+        oled.text("Alt_ref :", 0, 0)
+        oled.text(str(round(altitude0,2)), 70, 0)
+        oled.text("Haut:", 0, 8)
+        oled.text(str(round(altitude-altitude0,2)), 70, 8)
+        oled.text("Haut_M:", 0, 16)
+        oled.text(str(round(altitude_max-altitude0,2)), 70, 16)
+        oled.text("Tps (s):",00,24)
+        oled.text(str(elapsed_time/1000),70,24)
+        oled.show()
+        led.off()
 
+    if afficheur ==2:
+        oled.text("Temperature:", 0, 0)
+        oled.text(str(round(temperature_c,1)), 0, 8)
+        oled.text("Pression actuelle :", 0, 16)
+        oled.text(str(round(pressure_hPa,2)), 0, 24)
+        oled.show()
+        led.off()
 
+    if afficheur == 3:
+        oled.text("Num fichier:", 0, 0)
+        oled.text(str(r), 0, 8)
+        oled.show()
+        led.off()
+        
 altitude_max = -999
 utime.sleep (0.5)
  
@@ -239,13 +278,13 @@ while True:
     if altitude > alt and start == 1 :
         elapsed_time = ticks_ms() - start_time  
 
-    # Détection de l'apogée (-2m pour éviter que ça se déclenche avec la dérive):
+    #détection de l'apogée (-2m pour éviter que ça se déclenche avec la dérive):
     if altitude < altitude_max-2 :
         tableau_valeur = open(fichier,'a')
         tableau_valeur.write("\n")
         tableau_valeur.write("Apogée !")
         tableau_valeur.close()
-  
+    
     # Arrêt du chrono et remise à zero suite à un atterrissage :
     if altitude < alt and start == 1 :
         tableau_valeur = open(fichier,'a')
@@ -253,48 +292,11 @@ while True:
         tableau_valeur.write("Atterrissage")
         tableau_valeur.close()
         start = 0
-    
-    if afficheur == 0 :
-        oled.text("Alt_ref :", 0, 0)
-        oled.text(str(round(altitude0,2)), 70, 0)
-        oled.text("Alt:", 0, 8)
-        oled.text(str(round(altitude,2)), 70, 8)
-        oled.text("Alt_M:", 0, 16)
-        oled.text(str(round(altitude_max,2)), 70, 16)
-        oled.text("Tps (s):",00,24)
-        oled.text(str(elapsed_time/1000),70,24)
-        oled.text(str(r), 0, 48)
-        oled.show()
-        
-        led.off()
-    
-    if afficheur == 1 :
-        oled.text("Alt_ref :", 0, 0)
-        oled.text(str(round(altitude0,2)), 70, 0)
-        oled.text("Haut:", 0, 8)
-        oled.text(str(round(altitude-altitude0,2)), 70, 8)
-        oled.text("Haut_M:", 0, 16)
-        oled.text(str(round(altitude_max-altitude0,2)), 70, 16)
-        oled.text("Tps (s):",00,24)
-        oled.text(str(elapsed_time/1000),70,24)
-        oled.show()
-        led.off()
-    
-    if afficheur == 2 :
-        oled.text("Temperature:", 0, 0)
-        oled.text(str(round(temperature_c,1)), 0, 8)
-        oled.text("Pression actuelle :", 0, 16)
-        oled.text(str(round(pressure_hPa,2)), 0, 24)
-        oled.show()
-        led.off()
-        
-    if afficheur == 3 :
-        oled.text("Num fichier:", 0, 0)
-        oled.text(str(r), 0, 8)
-        oled.show()
-        led.off()
-    
+
+  # Affichage sur l'écran oled :
+    affichage(afficheur)    
  
     
    
+
 
