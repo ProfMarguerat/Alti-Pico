@@ -34,10 +34,6 @@ buzzer.duty_u16(1000)
 utime.sleep(0.1)
 buzzer.duty_u16(0)
 
-#gled.off()
-#bled.off()
-#rled.off()
-
 
 # Caliberation error in pressure
 # use it according to your situation
@@ -54,11 +50,6 @@ i2c_object = I2C(0,              # positional argument - I2C id
                  sda = sdaPin,   # named argument - serial data pin
                  freq = 1000000) # named argument - i2c frequency
 
-#sensor = msa301.MSA301(i2c_object) # initialization with default parameters
-#sensor.powerMode = 'Normal' # factory default is 'Suspnd', which does not give an acceleration reading
-#print(sensor.acceleration)  # acceleration is a tuple of (a_x, a_y, a_z)
-#z=sensor.acceleration[2]
-#print(z)
 
 WIDTH =128 
 HEIGHT= 32
@@ -146,30 +137,46 @@ def altitude_IBF(pressure):
     
     altitude = 44330*(1-(pressure_ratio**(1/5.255)))
     return altitude
+  
+def affichage(afficheur) :
+    if afficheur ==0 :
+        oled.text("Alt_ref :", 0, 0)
+        oled.text(str(round(altitude0,2)), 70, 0)
+        oled.text("Alt:", 0, 8)
+        oled.text(str(round(altitude,2)), 70, 8)
+        oled.text("Alt_M:", 0, 16)
+        oled.text(str(round(altitude_max,2)), 70, 16)
+        oled.text("Tps (s):",00,24)
+        oled.text(str(elapsed_time/1000),70,24)
+        oled.text(str(r), 0, 48)
+        oled.show()
+        led.off()
 
-#def thread_anim():
-#    global cpt
-#    global z
-#    while True :
-#        print (z)
-#        if z >=1 or z <= -1 :
-#            #print (sensor.acceleration[2])
-#            print("z sup à 1")
-#            while True:
-#                print (cpt/10)
-#                #oled.text(str(round(cpt, 2)), 0, 40)
-#                cpt +=1
-#                utime.sleep (0.1)
-#                gled.toggle() 
+    if afficheur ==1:
+        oled.text("Alt_ref :", 0, 0)
+        oled.text(str(round(altitude0,2)), 70, 0)
+        oled.text("Haut:", 0, 8)
+        oled.text(str(round(altitude-altitude0,2)), 70, 8)
+        oled.text("Haut_M:", 0, 16)
+        oled.text(str(round(altitude_max-altitude0,2)), 70, 16)
+        oled.text("Tps (s):",00,24)
+        oled.text(str(elapsed_time/1000),70,24)
+        oled.show()
+        led.off()
 
-#def chronometre():
-#  """Fonction pour chronométrer un intervalle."""
-#  start_time = ticks_ms()  # Enregistre le temps de début en millisecondes
-#  while True:
-#    elapsed_time = ticks_ms() - start_time  # Calcule le temps écoulé
-#    print(f"Temps écoulé: {elapsed_time} millisecondes")
- #   sleep(1)  # Attend une seconde avant d'afficher la nouvelle mesure
+    if afficheur ==2:
+        oled.text("Temperature:", 0, 0)
+        oled.text(str(round(temperature_c,1)), 0, 8)
+        oled.text("Pression actuelle :", 0, 16)
+        oled.text(str(round(pressure_hPa,2)), 0, 24)
+        oled.show()
+        led.off()
 
+    if afficheur == 3:
+        oled.text("Num fichier:", 0, 0)
+        oled.text(str(r), 0, 8)
+        oled.show()
+        led.off()
 
 altitude_max = -999
 utime.sleep (0.5)
@@ -177,19 +184,6 @@ utime.sleep (0.5)
 #oled.show()
 #pressure = bmp280_object.pressure
 
-
-#while boutton.value()==1:
-#    if boutton.value()==0:
- #       oled.fill(0)
- #       led.on()
- #       utime.sleep(2)
-  #      sea_level_pressure = ( pressure * 0.01 ) + ERROR
-  #      oled.text("QFE:", 0, 8)
- #       oled.text(str(round(sea_level_pressure,2)), 70, 8)
- #       oled.show()
- #       utime.sleep (2)
-  #      break
- 
 temperature_c = bmp280_object.temperature # degree celcius
     
     # convert celcius to kelvin
@@ -228,7 +222,7 @@ while True:
     #elapsed_time = ticks_ms() - start_time  # Calcule le temps écoulé
     #print(f"Temps écoulé: {elapsed_time} millisecondes")
     oled.fill(0)
-#    rled.on()
+
     # accquire temperature value in celcius
     temperature_c = bmp280_object.temperature # degree celcius
     
@@ -315,7 +309,13 @@ while True:
     # Défilement du chrono à condition qu'il soit parti et que l'altitude soit supérieur à celle du départ plus 2m, la condition sur start permet de remettre le chrono à zero :
     if altitude > alt and start == 1 :
         elapsed_time = ticks_ms() - start_time  
-
+    
+  # Détection de l'apogée (-2m pour éviter que ça se déclenche avec la dérive):
+    if altitude < altitude_max-2 and start == 1 :
+        tableau_valeur = open(fichier,'a')
+        tableau_valeur.write("\n")
+        tableau_valeur.write("Apogée !")
+        tableau_valeur.close()
   
     # Arrêt du chrono et remise à zero suite à un atterrissage :
     if altitude < alt and start == 1 :
@@ -325,45 +325,7 @@ while True:
         tableau_valeur.close()
         start = 0
       
-    if afficheur == 0 :
-        oled.text("Alt_ref :", 0, 0)
-        oled.text(str(round(altitude0,2)), 70, 0)
-        oled.text("Alt:", 0, 8)
-        oled.text(str(round(altitude,2)), 70, 8)
-        oled.text("Alt_M:", 0, 16)
-        oled.text(str(round(altitude_max,2)), 70, 16)
-        oled.text("Tps (s):",00,24)
-        oled.text(str(elapsed_time/1000),70,24)
-        oled.text(str(r), 0, 48)
-        oled.show()
-        led.off()
-        #utime.sleep(0.2)
-    
-    if afficheur == 1 :
-        oled.text("Alt_ref :", 0, 0)
-        oled.text(str(round(altitude0,2)), 70, 0)
-        oled.text("Haut:", 0, 8)
-        oled.text(str(round(altitude-altitude0,2)), 70, 8)
-        oled.text("Haut_M:", 0, 16)
-        oled.text(str(round(altitude_max-altitude0,2)), 70, 16)
-        oled.text("Tps (s):",00,24)
-        oled.text(str(elapsed_time/1000),70,24)
-        oled.show()
-        led.off()
-    
-    if afficheur == 2 :
-        oled.text("Temperature:", 0, 0)
-        oled.text(str(round(temperature_c,1)), 0, 8)
-        oled.text("Pression actuelle :", 0, 16)
-        oled.text(str(round(pressure_hPa,2)), 0, 24)
-        oled.show()
-        led.off()
-        
-    if afficheur == 3 :
-        oled.text("Num fichier:", 0, 0)
-        oled.text(str(r), 0, 8)
-        oled.show()
-        led.off()
+    affichage(afficheur)  
 
 
     
