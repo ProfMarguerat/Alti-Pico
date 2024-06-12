@@ -1,2 +1,3 @@
 Support pour ogive de 40mm de diamètre interne.  
-A modifier, les trous ne sont pas exactement alignés avec la carte.  
+
+https://github.com/ProfMarguerat/Alti-Pico/assets/171016883/6b52e9af-b229-4efd-b042-83c573405da9
