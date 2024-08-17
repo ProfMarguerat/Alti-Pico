@@ -25,7 +25,7 @@ led.off()
 sea_level_pressure = 1013.25
 cpt=0
 boutton = Pin(10, mode=Pin.IN, pull=Pin.PULL_UP)
-buzzer = PWM(Pin(27))
+buzzer = PWM(Pin(16))
 buzzer.freq(400)
 buzzer.duty_u16(1000)
 utime.sleep(0.1)
