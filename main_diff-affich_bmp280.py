@@ -28,7 +28,7 @@ cpt=0
 #bled = Pin(20, Pin.OUT) #bleu
 #rled = Pin(18, Pin.OUT) #rouge
 boutton = Pin(10, mode=Pin.IN, pull=Pin.PULL_UP)
-buzzer = PWM(Pin(27))
+buzzer = PWM(Pin(16))
 buzzer.freq(400)
 buzzer.duty_u16(1000)
 utime.sleep(0.1)
