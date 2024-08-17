@@ -114,8 +114,7 @@ def altitude_IBF(pressure):
     
     altitude = 44330*(1-(pressure_ratio**(1/5.255)))
     return altitude
-  
-# Fonction pour gérer les informations à afficher sur l'écran oled
+
 def affichage(afficheur) :
     if afficheur ==0 :
         oled.text("Alt_ref :", 0, 0)
@@ -170,7 +169,7 @@ temperature_k = temperature_c + 273.15
 pressure_hPa = float(bme.values[1][:len(bme.values[1]) - 3])  # hectopascal
     
     # accquire altitude values from HYPSOMETRIC formula
-h = altitude_HYP(pressure_hPa, temperature_k)
+h0 = altitude_HYP(pressure_hPa, temperature_k)
     
     # accquire altitude values from International Barometric Formula
 altitude0 = altitude_IBF(pressure_hPa)
@@ -178,6 +177,7 @@ altitude0 = altitude_IBF(pressure_hPa)
 oled.fill(0)
 oled.text("Alt_0:", 0, 16)
 oled.text(str(round(altitude0,2)), 70, 16)
+oled.text(str(round(h0,2)), 70, 24)
 oled.show()
 utime.sleep(1)
 
@@ -231,8 +231,8 @@ while True:
     #Buzzer pour retrouver la fusée au sol  
     if altitude<altitude_max :
         #print (round(altitude-altitude0,0))
-        if round(altitude-altitude0,0) < 0.5 :
-            buzzer.freq(100)
+        if round(altitude-altitude0,0) < 2 :
+            buzzer.freq(400)
             buzzer.duty_u16(1000)
             utime.sleep(0.05)
             buzzer.duty_u16(0)
@@ -279,21 +279,20 @@ while True:
         elapsed_time = ticks_ms() - start_time  
 
     #détection de l'apogée (-2m pour éviter que ça se déclenche avec la dérive):
-    if altitude < altitude_max-2 and start ==1 :
+    if altitude < altitude_max-2 and start == 1 :
         tableau_valeur = open(fichier,'a')
         tableau_valeur.write("\n")
         tableau_valeur.write("Apogée !")
         tableau_valeur.close()
     
     # Arrêt du chrono et remise à zero suite à un atterrissage :
-    if altitude < alt and start == 1 :
+    if altitude < alt-1 and start == 1 :
         tableau_valeur = open(fichier,'a')
         tableau_valeur.write("\n")
         tableau_valeur.write("Atterrissage")
         tableau_valeur.close()
         start = 0
-
-  # Affichage sur l'écran oled :
+    
     affichage(afficheur)    
  
     
