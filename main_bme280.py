@@ -72,7 +72,8 @@ for n in range(0,longueur - 1):
     oled.show()
     utime.sleep(0.1)
 
-texte_complet = "Appuyer sur le bouton longtemps pour remettre l'altitude max et le chrono a 0 et appui court pour changer d'affichage      "
+#texte_complet = "Appuyer sur le bouton longtemps pour remettre l'altitude max et le chrono a 0 et appui court pour changer d'affichage      "
+texte_complet = "appui long pour RAZ  "
 longueur = len(texte_complet)
 for n in range(0,longueur - 1):
     oled.fill(0)    
@@ -189,6 +190,8 @@ start = 0
 stop = 0
 elapsed_time = 0
 afficheur = 0
+apogee = 0
+alt2=altitude0+1.5
 
 while True:
     #elapsed_time = ticks_ms() - start_time  # Calcule le temps écoulé
@@ -228,22 +231,15 @@ while True:
     tableau_valeur.close()
     led.on()
     
-    #Buzzer pour retrouver la fusée au sol  
-    if altitude<altitude_max :
-        #print (round(altitude-altitude0,0))
-        if round(altitude-altitude0,0) < 2 :
-            buzzer.freq(400)
-            buzzer.duty_u16(1000)
-            utime.sleep(0.05)
-            buzzer.duty_u16(0)
-  
     
     if boutton.value()==0:
         utime.sleep(0.5)
         if boutton.value()==0:
             altitude_max=0
             altitude0 = altitude_IBF(pressure_hPa)
+            alt2=altitude0+1.5
             elapsed_time = 0
+            apogee = 0
             start = 0
             oled.fill(0)
             led.on()
@@ -262,10 +258,10 @@ while True:
     if altitude>altitude_max : 
         altitude_max=altitude
     
-    alt=altitude0+2
-    #print (alt)
-    # Démarrage chrono lorsque l'altitude dépasse celle de départ plus 2m pour pallier aux dérives de pression :
-    if altitude > alt and start == 0:
+    #alt=altitude0+2
+    #print (alt2)
+    # Démarrage chrono lorsque l'altitude dépasse celle de départ plus 1,5m pour pallier aux dérives de pression :
+    if altitude > alt2 and start == 0:
         #print ("c'est parti !")
         tableau_valeur = open(fichier,'a')
         tableau_valeur.write("\n")
@@ -273,25 +269,41 @@ while True:
         tableau_valeur.close()
         start = 1
         start_time = ticks_ms()
+        
     
-    # Défilement du chrono à condition qu'il soit parti et que l'altitude soit supérieur à celle du départ plus 2m, la condition sur start permet de remettre le chrono à zero :
-    if altitude > alt and start == 1 :
+    # Défilement du chrono à condition qu'il soit parti et que l'altitude soit supérieur à celle du départ plus 1,5m, la condition sur start permet de remettre le chrono à zero :
+    if altitude > alt2 and start == 1 :
         elapsed_time = ticks_ms() - start_time  
 
-    #détection de l'apogée (-2m pour éviter que ça se déclenche avec la dérive):
-    if altitude < altitude_max-2 and start == 1 :
+    #détection de l'apogée (-1m pour éviter que ça se déclenche avec la dérive):
+    if altitude < altitude_max-1 and start == 1 :
         tableau_valeur = open(fichier,'a')
         tableau_valeur.write("\n")
         tableau_valeur.write("Apogée !")
         tableau_valeur.close()
+        apogee = 1
     
     # Arrêt du chrono et remise à zero suite à un atterrissage :
-    if altitude < alt-1 and start == 1 :
+    if altitude <= altitude0 and start == 1 :
         tableau_valeur = open(fichier,'a')
         tableau_valeur.write("\n")
         tableau_valeur.write("Atterrissage")
         tableau_valeur.close()
         start = 0
+        #Pour éviter que ça se remette à zéro intempestivement :
+        alt2 = alt2+10
+    
+        #Buzzer pour retrouver la fusée au sol  
+    #if altitude<altitude_max :
+        #print (round(altitude-altitude0,0))
+        #if round(altitude-altitude0,0) < 2 :
+    if apogee == 1 : 
+        buzzer.freq(400)
+        buzzer.duty_u16(1000)
+        utime.sleep(0.05)
+        buzzer.duty_u16(0)
+    
+    #print (alt2)
     
     affichage(afficheur)    
  
