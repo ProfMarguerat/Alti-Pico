@@ -113,11 +113,19 @@ oled.fill(0)
 oled.text("Blocage porte", 0, 16)
 oled.show()
 servo.duty_u16(7000)    # rapport cyclique 3500/65535
-utime.sleep(0.2)
+utime.sleep(0.4)
 buzzer.freq(400)
 buzzer.duty_u16(1000)
 utime.sleep(0.1)
 buzzer.duty_u16(0)
+
+while boutton.value()== 1 :
+    utime.sleep(0.1)
+            #print ("Attente appui")
+    oled.fill(0)
+    oled.text("Attente appui ", 0, 8)
+    oled.text("pour debut acquisition ", 0, 16)
+    oled.show()
 
 # Function for calculation altitude from pressure and temperature values
 # because altitude() method is not present in the Library
@@ -219,6 +227,7 @@ apogee = 0
 atterrissage = 0 
 alt2=altitude0+1.5
 altitude_max = -999
+porte, elapsed_time_p, start_p  = 1,0,0 #Porte = 1 : porte férmée
 utime.sleep (0.1)
 
 while True:
@@ -268,6 +277,8 @@ while True:
             elapsed_time = 0
             apogee = 0
             start = 0
+            atterrissage = 0
+            porte, elapsed_time_p, start_p  = 0, 0, 0
             oled.fill(0)
             led.on()
             oled.text("RAZ Altitude max", 0, 16)
@@ -275,8 +286,9 @@ while True:
             utime.sleep(0.8)
             led.off()
             oled.fill(0)
-            servo.duty_u16(4000)    # rapport cyclique 3500/65535
+            servo.duty_u16(4000)    # rapport cyclique 3500/65535 ouverture de la porte
             utime.sleep(0.2)
+            porte = 0
             #Attente appuie sur bouton pour bloquer la porte
             while boutton.value()== 1 :
                 utime.sleep(0.1)
@@ -289,12 +301,21 @@ while True:
             oled.fill(0)
             oled.text("Blocage porte", 0, 16)
             oled.show()
+            porte = 1
             servo.duty_u16(7000)    # rapport cyclique 3500/65535
-            utime.sleep(0.2)
+            utime.sleep(0.4)
             buzzer.freq(400)
             buzzer.duty_u16(1000)
             utime.sleep(0.05)
             buzzer.duty_u16(0)
+            while boutton.value()== 1 :
+                utime.sleep(0.1)
+                #print ("Attente appui")
+                oled.fill(0)
+                oled.text("Attente appui ", 0, 8)
+                oled.text("pour debut acquisition ", 0, 16)
+                oled.show()
+
         
         
         else :
@@ -317,13 +338,25 @@ while True:
         tableau_valeur.close()
         start = 1
         start_time = ticks_ms()
+        start_p = 1
         
     
-    # Défilement du chrono à condition qu'il soit parti et que l'altitude soit supérieur à celle du départ plus 1,5m, la condition sur start permet de remettre le chrono à zero :
+    # Défilement du chrono à condition qu'il soit parti, la condition sur start permet de remettre le chrono à zero :
     if start == 1 :
         elapsed_time = ticks_ms() - start_time  
+    
+    # Défilement du chrono à condition qu'il soit parti, sans arrêt, contrairement à start qui s'arrête quand la fusée a atterrie :
+    if start_p == 1 :
+        elapsed_time_p = ticks_ms() - start_time
+        #print (elapsed_time, elapsed_time_p/1000)
+        
+    # Ouverture de la porte après 5s de vol. La variable porte permet d'éviter la redondance de l'ouverture de la porte à chaque rotation du porgramme:
+    #if (elapsed_time_p/1000) > 5 and porte == 1 :
+    #    servo.duty_u16(4000)    # rapport cyclique 3500/65535
+    #    utime.sleep(.1)
+    #    porte = 0
 
-    #détection de l'apogée (-1m pour éviter que ça se déclenche avec la dérive):
+    # Détection de l'apogée (-1m pour éviter que ça se déclenche avec la dérive) :
     if altitude < altitude_max-1 and start == 1 and apogee == 0 :
         tableau_valeur = open(fichier,'a')
         tableau_valeur.write("\n")
@@ -334,8 +367,16 @@ while True:
         buzzer.duty_u16(1000)
         utime.sleep(0.05)
         buzzer.duty_u16(0)
+    
+    # Ouverture de la porte à altitude max -2m :
+    if altitude < altitude_max-2 and apogee == 1 and porte == 1:
+        tableau_valeur = open(fichier,'a')
+        tableau_valeur.write("\n")
+        tableau_valeur.write("Ouverture porte")
+        tableau_valeur.close()
         servo.duty_u16(4000)    # rapport cyclique 3500/65535
         utime.sleep(.5)          # temps d'arrêt
+        porte = 0
     
     # Arrêt du chrono et remise à zero suite à un atterrissage :
     if altitude <= altitude0 and start == 1 :
@@ -360,4 +401,6 @@ while True:
     affichage(afficheur)  
     
    
+
+
 
