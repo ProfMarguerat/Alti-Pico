@@ -225,7 +225,7 @@ elapsed_time = 0
 afficheur = 0
 apogee = 0
 atterrissage = 0 
-alt2=altitude0+1.5
+alt2=altitude0+2
 altitude_max = -999
 porte, elapsed_time_p, start_p  = 1,0,0 #Porte = 1 : porte férmée
 utime.sleep (0.1)
@@ -273,7 +273,7 @@ while True:
         if boutton.value()==0:
             altitude_max=-999
             altitude0 = altitude_IBF(pressure_hPa)
-            alt2=altitude0+1.5
+            alt2=altitude0+2
             elapsed_time = 0
             apogee = 0
             start = 0
@@ -329,7 +329,7 @@ while True:
     
     #alt=altitude0+2
     #print (alt2)
-    # Démarrage chrono lorsque l'altitude dépasse celle de départ plus 1,5m pour pallier aux dérives de pression :
+    # Démarrage chrono lorsque l'altitude dépasse celle de départ plus 2m pour pallier aux dérives de pression :
     if altitude > alt2 and start == 0:
         #print ("c'est parti !")
         tableau_valeur = open(fichier,'a')
@@ -379,12 +379,12 @@ while True:
         porte = 0
     
     # Arrêt du chrono et remise à zero suite à un atterrissage :
-    if altitude <= altitude0 and start == 1 :
+    if altitude < altitude0 and apogee == 1 and atterrissage == 0 :
         tableau_valeur = open(fichier,'a')
         tableau_valeur.write("\n")
         tableau_valeur.write("Atterrissage")
         tableau_valeur.close()
-        start = 0
+        #start = 0
         atterrissage = 1
         #Pour éviter que ça se remette à zéro intempestivement :
         alt2 = alt2+10
