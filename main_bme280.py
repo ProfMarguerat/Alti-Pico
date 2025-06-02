@@ -11,7 +11,8 @@ from time import ticks_ms, sleep
 
 led = Pin("LED", Pin.OUT)
 led.on()
-  
+
+
 print("creation d'un nouveau fichier")
 r = randint (0,1000000000)
 fichier =("BME280_Tableau")+(str(r))+(".csv")
@@ -72,8 +73,7 @@ for n in range(0,longueur - 1):
     oled.show()
     utime.sleep(0.1)
 
-#texte_complet = "Appuyer sur le bouton longtemps pour remettre l'altitude max et le chrono a 0 et appui court pour changer d'affichage      "
-texte_complet = "appui long pour RAZ  "
+texte_complet = "Appuie long RAZ      "
 longueur = len(texte_complet)
 for n in range(0,longueur - 1):
     oled.fill(0)    
@@ -88,6 +88,7 @@ for n in range(0,longueur - 1):
 #oled.fill(0)
 oled.text("Bon vol !", 30, 16)
 oled.show()
+utime.sleep(0.5)
 
 bme = bme280.BME280(i2c=i2c)
 
@@ -163,8 +164,7 @@ def affichage(afficheur) :
         oled.show()
         led.off()
         
-altitude_max = -999
-utime.sleep (0.5)
+
  
 t=bme.values[0]
 tt=float(t[:len(t) - 1])
@@ -177,7 +177,7 @@ temperature_k = temperature_c + 273.15
 pressure_hPa = float(bme.values[1][:len(bme.values[1]) - 3])  # hectopascal
     
     # accquire altitude values from HYPSOMETRIC formula
-h0 = altitude_HYP(pressure_hPa, temperature_k)
+h = altitude_HYP(pressure_hPa, temperature_k)
     
     # accquire altitude values from International Barometric Formula
 altitude0 = altitude_IBF(pressure_hPa)
@@ -185,7 +185,6 @@ altitude0 = altitude_IBF(pressure_hPa)
 oled.fill(0)
 oled.text("Alt_0:", 0, 16)
 oled.text(str(round(altitude0,2)), 70, 16)
-oled.text(str(round(h0,2)), 70, 24)
 oled.show()
 utime.sleep(1)
 
@@ -199,9 +198,9 @@ elapsed_time = 0
 afficheur = 0
 apogee = 0
 atterrissage = 0 
-alt2=altitude0+1.5
+alt2=altitude0+2
 altitude_max = -999
-porte, elapsed_time_p, start_p  = 0,0,0
+porte, elapsed_time_p, start_p  = 1,0,0 #Porte = 1 : porte férmée
 utime.sleep (0.1)
 
 while True:
@@ -247,7 +246,7 @@ while True:
         if boutton.value()==0:
             altitude_max=-999
             altitude0 = altitude_IBF(pressure_hPa)
-            alt2=altitude0+1.5
+            alt2=altitude0+2
             elapsed_time = 0
             apogee = 0
             start = 0
@@ -260,6 +259,12 @@ while True:
             utime.sleep(0.8)
             led.off()
             oled.fill(0)
+            porte = 0
+                     
+            buzzer.freq(400)
+            buzzer.duty_u16(1000)
+            utime.sleep(0.05)
+            buzzer.duty_u16(0)
             while boutton.value()== 1 :
                 utime.sleep(0.1)
                 #print ("Attente appui")
@@ -281,7 +286,7 @@ while True:
     
     #alt=altitude0+2
     #print (alt2)
-    # Démarrage chrono lorsque l'altitude dépasse celle de départ plus 1,5m pour pallier aux dérives de pression :
+    # Démarrage chrono lorsque l'altitude dépasse celle de départ plus 2m pour pallier aux dérives de pression :
     if altitude > alt2 and start == 0:
         #print ("c'est parti !")
         tableau_valeur = open(fichier,'a')
@@ -302,8 +307,13 @@ while True:
         elapsed_time_p = ticks_ms() - start_time
         #print (elapsed_time, elapsed_time_p/1000)
         
-    
-    # Détection de l'apogée (-1m pour éviter que ça se déclenche avec la dérive) et ouverture de la porte :
+    # Ouverture de la porte après 5s de vol. La variable porte permet d'éviter la redondance de l'ouverture de la porte à chaque rotation du porgramme:
+    #if (elapsed_time_p/1000) > 5 and porte == 1 :
+    #    servo.duty_u16(4000)    # rapport cyclique 3500/65535
+    #    utime.sleep(.1)
+    #    porte = 0
+
+    # Détection de l'apogée (-1m pour éviter que ça se déclenche avec la dérive) :
     if altitude < altitude_max-1 and start == 1 and apogee == 0 :
         tableau_valeur = open(fichier,'a')
         tableau_valeur.write("\n")
@@ -315,14 +325,13 @@ while True:
         utime.sleep(0.05)
         buzzer.duty_u16(0)
        
-    
     # Arrêt du chrono et remise à zero suite à un atterrissage :
-    if altitude <= altitude0 and start == 1 :
+    if altitude < altitude0 and apogee == 1 and atterrissage == 0 :
         tableau_valeur = open(fichier,'a')
         tableau_valeur.write("\n")
         tableau_valeur.write("Atterrissage")
         tableau_valeur.close()
-        start = 0
+        #start = 0
         atterrissage = 1
         #Pour éviter que ça se remette à zéro intempestivement :
         alt2 = alt2+10
@@ -341,7 +350,5 @@ while True:
    
 
 
-
-   
 
 
