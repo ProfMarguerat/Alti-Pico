@@ -6,6 +6,18 @@ Il y a un code pour le BMP et un autre pour le BME.
 Il y a également une librairie pour chaque composant.  
 Il est possible de télécharger les librairies directement avec Thonny.  
 
+Pour construire cet altimètre, il faut :
+- un raspberry Pico
+- un lipo Shim pour Pico
+- une petite batterie lipo 
+- un ecran oled 0,96"
+- un capteur BME280
+- un buzzer
+- un bouton poussoir
+- une plaque de prototypage pour braser les différents éléments.
+
+
+
 Dans la partie Support_3D, vous retrouverez les fichiers pour fabriquer un support allant dans un tube de 40mm de diamètre interne.
 
 ## Dossier du Pico :
