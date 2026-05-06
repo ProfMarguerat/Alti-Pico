@@ -20,6 +20,8 @@ Pour construire cet altimètre, il faut :
 
 Dans la partie Support_3D, vous retrouverez les fichiers pour fabriquer un support allant dans un tube de 40mm de diamètre interne.
 
+Il y a une version avec la commande d'un servo moteur pour ouvrir une trape juste après l'apogée.
+
 ## Dossier du Pico :
 
 ![Image](https://github.com/user-attachments/assets/52639954-3d94-43cf-9959-b4d470dda080)
@@ -36,3 +38,6 @@ Dans la partie Support_3D, vous retrouverez les fichiers pour fabriquer un suppo
 ![IMG_0589_resultat](https://github.com/user-attachments/assets/e049f7c6-f822-409b-ba8c-19c6ef12c764)
 ![IMG_0591_resultat](https://github.com/user-attachments/assets/bb0d9d67-652f-40c5-b48d-225a43760567)
 ![IMG_0594_resultat](https://github.com/user-attachments/assets/c51512ce-147b-4b91-a588-809ee58b2495)
+<img width="5184" height="3456" alt="Image" src="https://github.com/user-attachments/assets/b72c74b7-cea2-4363-b885-1664d1d8dfb4" />
+<img width="5184" height="3456" alt="Image" src="https://github.com/user-attachments/assets/1ebbf005-8f68-4bca-829f-acb258788a8b" />
+<img width="5184" height="3456" alt="Image" src="https://github.com/user-attachments/assets/389ff157-e824-4cf2-bbba-f2a282780a05" />
