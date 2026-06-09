@@ -225,8 +225,9 @@ elapsed_time = 0
 afficheur = 0
 apogee = 0
 atterrissage = 0 
-alt2=altitude0+4
+alt2=altitude0+8
 altitude_max = -999
+hauteur=0
 porte, elapsed_time_p, start_p  = 1,0,0 #Porte = 1 : porte férmée
 utime.sleep (0.1)
 
@@ -273,7 +274,7 @@ while True:
         if boutton.value()==0:
             altitude_max=-999
             altitude0 = altitude_IBF(pressure_hPa)
-            alt2=altitude0+4
+            alt2=altitude0+8
             elapsed_time = 0
             apogee = 0
             start = 0
@@ -329,7 +330,7 @@ while True:
     
     #alt=altitude0+2
     #print (alt2)
-    # Démarrage chrono lorsque l'altitude dépasse celle de départ plus 4m pour pallier aux dérives de pression :
+    # Démarrage chrono lorsque l'altitude dépasse celle de départ plus 8m pour pallier aux dérives de pression :
     if altitude > alt2 and start == 0:
         #print ("c'est parti !")
         tableau_valeur = open(fichier,'a')
@@ -368,8 +369,9 @@ while True:
         utime.sleep(0.05)
         buzzer.duty_u16(0)
     
-    # Ouverture de la porte à altitude max -2m :
-    if altitude < altitude_max-2 and apogee == 1 and porte == 1:
+    # Ouverture de la porte à altitude 20m :
+    hauteur=altitude-altitude0
+    if hauteur < 20 and apogee == 1 and porte == 1:
         tableau_valeur = open(fichier,'a')
         tableau_valeur.write("\n")
         tableau_valeur.write("Ouverture porte")
@@ -379,12 +381,12 @@ while True:
         porte = 0
     
     # Arrêt du chrono et remise à zero suite à un atterrissage :
-    if altitude < altitude0 and apogee == 1 and atterrissage == 0 :
+    if altitude <= altitude0 and start == 1 :
         tableau_valeur = open(fichier,'a')
         tableau_valeur.write("\n")
         tableau_valeur.write("Atterrissage")
         tableau_valeur.close()
-        #start = 0
+        start = 0
         atterrissage = 1
         #Pour éviter que ça se remette à zéro intempestivement :
         alt2 = alt2+10
@@ -396,11 +398,13 @@ while True:
         utime.sleep(0.05)
         buzzer.duty_u16(0)
     
-    #print (alt2)
+    #print (altitude)
+    #print (hauteur)
     
     affichage(afficheur)  
     
    
+
 
 
 
