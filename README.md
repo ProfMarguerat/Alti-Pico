@@ -24,7 +24,7 @@ Il y a une version avec la commande d'un servo moteur pour ouvrir une trape just
 
 ## Dossier du Pico :
 
-![Image](https://github.com/user-attachments/assets/52639954-3d94-43cf-9959-b4d470dda080)
+<img width="327" height="296" alt="Image" src="https://github.com/user-attachments/assets/7ab13db6-b338-4a3d-b0fe-995cd53cbabb" />
 
 ## Schéma de câblage :
 
