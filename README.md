@@ -31,6 +31,16 @@ Il y a une version avec la commande d'un servo moteur pour ouvrir une trape just
 ![alti_pico_bb](https://github.com/ProfMarguerat/Alti-Pico/assets/171016883/e41e84d7-90ad-4757-94a7-2bae566485ba)
 
 ## Construction :
+<img width="5184" height="3456" alt="Image" src="https://github.com/user-attachments/assets/2efbacd2-78a1-4469-b67b-3dce28e4e9e9" />
+<img width="5184" height="3456" alt="Image" src="https://github.com/user-attachments/assets/f9b82372-82ee-43b9-a0ba-7082b7349e28" />
+<img width="5184" height="3456" alt="Image" src="https://github.com/user-attachments/assets/3f0ddb00-228d-4c04-bae5-c6b1236c48db" />
+<img width="5184" height="3456" alt="Image" src="https://github.com/user-attachments/assets/ec066690-2e7e-4279-94bc-be2d1584c7e1" />
+<img width="5184" height="3456" alt="Image" src="https://github.com/user-attachments/assets/3a8d3305-2e77-497d-a81d-819ec67e7f37" />
+<img width="5184" height="3456" alt="Image" src="https://github.com/user-attachments/assets/49cd9fbb-0572-479d-a429-3426111626dc" />
+<img width="5184" height="3456" alt="Image" src="https://github.com/user-attachments/assets/f86e5981-dbdd-44ce-bb45-9337e0913412" />
+<img width="5184" height="3456" alt="Image" src="https://github.com/user-attachments/assets/a146dd55-3ba0-448f-8fb1-f950f6826b77" />
+<img width="5184" height="3456" alt="Image" src="https://github.com/user-attachments/assets/191dbe20-6f29-4936-805d-d4aca2f54114" />
+<img width="5184" height="3456" alt="Image" src="https://github.com/user-attachments/assets/9b555b4b-6561-444d-8a45-8015f112b253" />
 
 ![IMG_0586_resultat](https://github.com/user-attachments/assets/6cb7561f-615e-478d-a383-e05e126d4bb3)
 ![IMG_0587_resultat](https://github.com/user-attachments/assets/a0e6f3ff-e0a2-4e93-bed1-66a520df1e76)
